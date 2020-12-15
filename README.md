@@ -1,3 +1,3 @@
-# Cheramore
+# Wolf Novelette
 
-Общегильдийский Readme, да?
+Орденский Readme, да?
