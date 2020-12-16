@@ -51,6 +51,7 @@ library Soudator requires Timeration, General
 			local thistype this = countdown.getDataFromExpired()
 			if this.clock.tick == this.clock.alarm then
 				call this.clock.refresh()
+				set this.trackId = lims( this.trackId + 1, 0, this.trackFin - 1 )
 				set this.clock.alarm = this.trackDuration[this.trackId] 
 				call this.stop()
 				call this.play()
