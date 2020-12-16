@@ -1,0 +1,25 @@
+library ColorVectors
+	struct rgba
+		integer red 	= 0
+		integer green 	= 0
+		integer blue 	= 0
+		integer alpha 	= 0
+
+		method destroy takes nothing returns nothing
+			set this.red 	= 0
+			set this.green 	= 0
+			set this.blue 	= 0
+			set this.alpha 	= 0
+			call .deallocate()
+		endmethod
+
+		static method create takes integer r, integer g, integer b, integer a returns thistype
+			local thistype this = thistype.allocate()
+			set this.red 	= r
+			set this.green 	= g
+			set this.blue 	= b
+			set this.alpha 	= a
+			return this
+		endmethod
+	endstruct 
+endlibrary

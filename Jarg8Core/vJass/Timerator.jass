@@ -1,4 +1,4 @@
-library Timeration requires General
+library Timeration requires General, ColorVectors
 
 	struct countdown 
 		timer 	dial 	= null
@@ -97,6 +97,82 @@ library Timeration requires General
 	endstruct
 
 	struct limb
+		timerdialog dial 		= null
+		countdown 	clock 		= 0
+		string 		label 		= null
+		rgba 		color 		= 0
+		rgba 		color2 		= 0
+		boolean 	ownClock 	= false
 
+		method destroy takes nothing returns nothing
+			if this.ownClock then
+				call this.clock.pause()
+				call this.clock.destroy()
+			endif
+			set this.dial 		= null
+			set this.clock 		= 0
+			set this.label 		= null
+			set this.color 		= 0
+			set this.color2 	= 0
+			set this.ownClock 	= false
+		endmethod
+
+		method operator title takes nothing returns string
+			return this.label
+		endmethod
+
+		method operator title= takes string str returns nothing
+			set this.label = str
+			call TimerDialogSetTitle( this.dial, this.label )
+		endmethod
+
+		method operator colorTitle  takes nothing returns rgba
+			return this.color
+		endmethod
+
+		method operator colorTitle= takes rgba vcl returns nothing
+			set this.color = vcl
+			call TimerDialogSetTitleColor( this.dial, vcl.red, vcl.green, vcl.blue, vcl.alpha )
+		endmethod
+
+		method operator colorTime  takes nothing returns rgba
+			return this.color2
+		endmethod
+
+		method operator colorTime= takes rgba vcl returns nothing 
+			set this.color2 = vcl
+			call TimerDialogSetTimeColor( this.dial, vcl.red, vcl.green, vcl.blue, vcl.alpha )
+		endmethod
+
+		method mfSpeed takes real mfs returns nothing
+			call TimerDialogSetSpeed( this.dial, mfs )
+		endmethod
+
+		method rtRemaining takes real rmng returns nothing
+			call TimerDialogSetRealTimeRemaining( this.dial, rmng)
+		endmethod
+
+		method show takes boolean b returns nothing
+			call TimerDialogDisplay( this.dial, b )
+		endmethod
+
+		method showForPlayer takes boolean b, player p returns nothing
+			if GetLocalPlayer() == p then
+				call TimerDialogDisplay( this.dial, b )
+			endif
+		endmethod
+
+		static method create takes countdown ct returns thistype
+			local thistype this = thistype.allocate()
+			if ct < 0 then
+				set this.clock 		= countdown.create()
+				set this.ownClock 	= true
+			else
+				set this.clock = ct
+			endif
+			set this.dial = CreateTimerDialog( this.clock.dial )
+			set this.title = "Tik-Tak"
+			return this
+		endmethod
 	endstruct
 endlibrary

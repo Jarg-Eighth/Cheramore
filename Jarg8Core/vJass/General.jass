@@ -1,6 +1,7 @@
 library General
 	globals
-		hashtable HT = null
+		hashtable 	HT = null
+		location 	Terroc = Location(0.0,0.0)
 	endglobals
 
 	function B2I takes boolean b returns integer
@@ -24,6 +25,11 @@ library General
 		return "false"
 	endfunction
 
+	function GetPointZ takes real x, real y returns real
+		call MoveLocation(Terroc, x, y )
+		return GetLocationZ(Terroc)
+	endfunction 
+
 	function limx takes integer v, integer x returns integer
 		if v > x then
 			return x
@@ -46,5 +52,22 @@ library General
 		endif
 		return v 
 	endfunction
+
+	function setUUD takes unit u, integer d returns nothing
+		call SetUnitUserData( u, d + 1)
+	endfunction
+
+	function getUUD takes unit u returns integer
+		return GetUnitUserData( u ) - 1
+	endfunction
+
+	function setID takes item u, integer d returns nothing
+		call SetItemUserData( u, d + 1)
+	endfunction
+
+	function getID takes item u returns integer
+		return GetItemUserData( u ) - 1
+	endfunction
+
 
 endlibrary
