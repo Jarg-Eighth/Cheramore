@@ -1,0 +1,36 @@
+library StatModel requires General
+	struct statmodel 
+		// Основное
+		integer damage 			= 0 // Урон с атаки
+		integer armor 			= 0 // Защита
+		integer dice 			= 0 // кости атаки
+		integer side 			= 0 // кости атаки
+		// Дополнительное
+		integer bonus_damage	= 0 // Бонусная атака
+		integer bonus_armor 	= 0 // Бонусная защита
+		integer bonus_rate 		= 0 // Бонусная скорость атаки
+		integer bonus_int 		= 0 // Бонусный разум
+		integer bonus_str		= 0 // Бонусная сила
+		integer bonus_agi 		= 0 // Бонусная ловкость
+
+		method destroy takes nothing returns nothing
+			set this.damage 	= 0
+			set this.armor		= 0
+			set this.dice		= 0
+			set this.side		= 0
+
+			set this.bonus_damage 	= 0
+			set this.bonus_armor  	= 0
+			set this.bonus_rate 	= 0
+			set this.bonus_int		= 0
+			set this.bonus_str		= 0
+			set this.bonus_agi		= 0
+			
+			call this.deallocate()
+		endmethod
+
+		static method create takes nothing returns thistype
+			return thistype.allocate()
+		endmethod
+	endstruct
+endlibrary

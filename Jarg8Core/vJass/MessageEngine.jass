@@ -1,0 +1,18 @@
+library MessageEngine requires Timeration, Objects
+	struct msgine 
+		string 		message = null
+		countdown	delay 	= 0
+	
+	static method callback takes nothing returns nothing
+		local thistype this = countdown.getDataFromExpired()
+		call this.delay.pause()
+		call this.delay.destroy()
+		call gvent
+	endmethod
+	static method create takes nothing returns nothing
+		local thistype this = thistype.allocate()
+		set this.message = "|n"
+		return this 
+	endmethod
+	endstruct
+endlibrary

@@ -1,5 +1,5 @@
 // Sound library for patch 1.26+ until 1.32
-library Soudator requires Timeration, General
+library Soundator requires Timeration, General
 	globals
 		constant integer PLAYLIST_MAX_TRACKS = 100
 	endglobals

@@ -1,0 +1,7 @@
+library Initializator requires General, Objects, Soundator, 
+	
+	function BigInitialization takes nothing returns nothing
+		call InitializeGeneral()
+		call InitializeUsers()
+	endfunction
+endlibrary

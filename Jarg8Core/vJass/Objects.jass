@@ -1,0 +1,124 @@
+library Objects requires General, StatModel
+
+	struct object
+		unit subject = null
+		real x = 0.	// Позиция X
+		real y = 0. // Позиция Y
+		real z = 0. // Позиция Z
+		real h = 0. // Высота полёта
+		real f = 0. // Поворот
+
+		statmodel stats = 0
+		gamedata  info  = 0
+
+		boolean ignore = false // Для заглушки события входа\выхода в области
+		boolean idle   = false // Для определения единица как неигровой единицы
+	
+		method destroy takes nothing returns nothing
+			set this.subject = null
+			set this.x = 0
+			set this.y = 0
+			set this.z = 0
+			set this.h = 0
+			set this.f = 0
+			if not this.idle then
+				call stats.destroy()
+			endif
+			call this.deallocate()
+		endmethod
+			
+		method strore takes nothing returns nothing
+			set this.x = GetWidgetX(this.subject)
+			set this.y = GetWidgetY(this.subject)
+			set this.z = GetPointZ(this.x,this.y)
+			set this.h = GetUnitFlyHeight(this.subject)
+			set this.f = GetUnitFacing(this.subject)
+		endmethod
+
+		method getDirection takes real x, real y returns real
+			return Atan2( y - this.y, x - this.x )
+		endmethod
+
+		method setFacing takes real f returns nothing
+			set this.f = f
+			call SetUnitFacingTimed( this.subject, this.f, 0. )
+		endmethod 
+
+		method setDirection takes real d returns nothing
+			set this.f = d * 57.2958279
+			call SetUnitFacingTimed( this.subject, this.f, 0. )
+		endmethod
+
+		method move takes real newDist, real direction returns nothing
+			set this.x = this.x + newDist * Cos(direction)
+			set this.y = this.y + newDist * Sin(direction)
+			set this.ignore = true
+			call SetUnitX( this.subject, this.x )
+			call SetUnitY( this.subject, this.y )
+			set this.ignore = false
+		endmethod
+
+		method relocate takes real x, real y returns nothing
+			set this.x = x
+			set this.y = y
+			set this.ignore = true
+			call SetUnitX( this.subject, this.x )
+			call SetUnitY( this.subject, this.y )
+			set this.ignore = false
+		endmethod
+		
+		static method create takes unit one returns thistype
+			local thistype this = thistype.allocate()
+			call setUUD( one, this )
+			set this.idle = GetUnitAbilityLevel( one, 'Aloc' ) > 0
+			set this.subject = one
+			return this
+		endmethod
+
+	endstruct
+
+
+	struct gamedata 
+				player 	gamer 		= null		// Игрок
+				integer gamerId 	= 0			// ID игрока
+		
+		static 	integer	count  		= 0 		// Число игроков
+		
+				integer	cell 		= 0 		// Ячейка мултидоски
+				boolean flag 		= false 	// Флаг игры, в игре ли игрок, компьютеров не считает
+				object  hero 		= 0
+				
+				method destroy takes nothing returns nothing
+					set this.gamer 		= null
+					set this.cell		= 0
+					set this.gamerId	= 0
+					set this.flag 		= false
+					set this.hero 		= 0
+					call this.deallocate()
+				endmethod
+
+		static 	method create takes integer id returns thistype
+					local thistype this = thistype.allocate()
+					set this.gamer 		= Player(id)
+					set this.gamerId 	= id
+					set this.flag 		= GetPlayerController(this.gamer) == MAP_CONTROL_USER and GetPlayerSlotState( this.gamer ) == PLAYER_SLOT_STATE_PLAYING
+					if this.flag then
+						set thistype.count = thistype.count + 1
+					endif	
+					return this 
+				endmethod
+	endstruct
+
+	globals
+		gamedata array user 
+	endglobals
+
+	function InitializeUsers takes nothing returns nothing
+		set Index = 0
+		loop
+			set Index:user = gamedata.create(Index)
+			set Index = Index + 1
+		exitwhen Index == bj_MAX_PLAYERS 
+		endloop
+	endfunction
+endlibrary

@@ -1,0 +1,16 @@
+library FeeCore requires Timeration, Objects
+    struct fee
+    	countdown 	clock 	= 0
+    	object		source 	= 0
+    	object 		target 	= 0
+    	object 		dummy 	= 0
+        
+    	static method create takes nothing returns thistype 
+
+    	endmethod
+
+    	static method create takes nothing returns thistype 
+    		return thistype.allocate()
+    	endmethod
+    endstruct 
+endlibrary
