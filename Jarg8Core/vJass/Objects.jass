@@ -1,4 +1,4 @@
-library Objects requires General, StatModel
+library Objects requires Configurator, General, ColorVectors, StatModel
 
 	struct object
 		unit subject = null
@@ -10,6 +10,7 @@ library Objects requires General, StatModel
 
 		statmodel stats = 0
 		gamedata  info  = 0
+		rgba 	  vex 	= 0
 
 		boolean ignore = false // Для заглушки события входа\выхода в области
 		boolean idle   = false // Для определения единица как неигровой единицы
@@ -33,6 +34,11 @@ library Objects requires General, StatModel
 			set this.z = GetPointZ(this.x,this.y)
 			set this.h = GetUnitFlyHeight(this.subject)
 			set this.f = GetUnitFacing(this.subject)
+		endmethod
+
+		method setVex takes rgba vcl returns nothing
+			call SetUnitVertexColor( this.subject, vcl.red, vcl.green, vcl.blue, vcl.alpha )
+			set this.vex = vcl
 		endmethod
 
 		method getDirection takes real x, real y returns real
@@ -119,6 +125,17 @@ library Objects requires General, StatModel
 			set Index:user = gamedata.create(Index)
 			set Index = Index + 1
 		exitwhen Index == bj_MAX_PLAYERS 
+		endloop
+	endfunction
+
+	function gvent takes string msg returns nothing
+		set Index = 0
+		loop
+			if Index:user.flag then 
+				call DisplayTimedTextToPlayer( Index:user.gamer, 0., 0., GAME_MESSAGE_LIFESPAN, msg )
+			endif
+			set Index = Index + 1
+		exitwhen Index == bj_MAX_PLAYERS
 		endloop
 	endfunction
 endlibrary

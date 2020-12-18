@@ -1,17 +1,58 @@
-library MessageEngine requires Timeration, Objects
+library MessageEngine requires Configurator, Timeration, Objects
 	struct msgine 
-		string 		message = null
-		countdown	delay 	= 0
-	
+		string 		message 	= null
+		countdown	delay 		= 0
+		integer 	gid 		= 0
+		boolean 	wdDestroy 	= false
+
 	static method callback takes nothing returns nothing
 		local thistype this = countdown.getDataFromExpired()
 		call this.delay.pause()
 		call this.delay.destroy()
-		call gvent
+		if this.gid < 0 then
+			call gvent(this.message)
+		else
+			call DisplayTimedTextToPlayer( this.gid:user.gamer, 0., 0., GAME_MESSAGE_LIFESPAN, this.message  )
+			set this.gid = 0 - 1
+		endif
+		if this.wdDestroy then
+			call this.destroy()
+		endif
 	endmethod
-	static method create takes nothing returns nothing
+
+	method print takes nothing returns nothing
+		call gvent(this.message)
+	endmethod
+
+	method printlag takes real time returns thistype
+		set this.delay = countdown.create()
+		call this.delay.push( this, -time, function thistype.callback )
+		return this
+	endmethod
+	
+	method add takes string msg, boolean newLine returns nothing
+		if newLine then
+			set this.message = this.message + "\n" 
+		endif
+		set this.message = this.message + msg
+	endmethod
+
+	method printlagfp takes real time, integer id returns thistype
+		set this.delay = countdown.create()
+		set this.gid = id
+		call this.delay.push( this, -time, function thistype.callback )
+		return this
+	endmethod
+
+	method printToPlayer takes integer id returns nothing
+		call DisplayTimedTextToPlayer( id:user.gamer, 0., 0., GAME_MESSAGE_LIFESPAN, this.message  )
+	endmethod
+
+	static method create takes nothing returns thistype
 		local thistype this = thistype.allocate()
-		set this.message = "|n"
+		set this.message = "\n"
+		set this.gid = 0 - 1
+		set this.wdDestroy = false
 		return this 
 	endmethod
 	endstruct

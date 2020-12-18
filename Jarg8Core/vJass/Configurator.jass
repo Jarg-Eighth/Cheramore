@@ -1,0 +1,22 @@
+library Configurator
+	// Ненужные конфиги вы можете закомментировать
+	globals
+		constant real 		GAME_MESSAGE_LIFESPAN = 20.0
+		// Для базы данных в хеше, в основном для предметов
+		constant integer 	DATA_ATTACK_BONUS 	  = StringHash("Bonus Damage")
+		constant integer 	DATA_ARMOR_BONUS 	  = StringHash("Bonus Armor")
+		constant integer 	DATA_RATE_BONUS	  	  = StringHash("Bonus Attack Speed")
+		constant integer 	DATA_INT_BONUS		  = StringHash("Bonus Intelligence")
+		constant integer 	DATA_AGI_BONUS		  = StringHash("Bonus Agility")
+		constant integer 	DATA_STR_BONUS		  = StringHash("Bonus Strength")
+		constant integer 	DATA_HP_BONUS	  	  = StringHash("Bonus Life")
+		constant integer 	DATA_MP_BONUS	  	  = StringHash("Bonus Mana")
+		// Для базы данных в хеше, в основном для боевых единиц
+		constant integer 	DATA_ATTACK 		  = StringHash("Attack")
+		constant integer 	DATA_ARMOR 		  	  = StringHash("Armor")
+		constant integer 	DATA_SIDE 		  	  = StringHash("Side")
+		constant integer 	DATA_DICE 		  	  = StringHash("Dice")
+		constant integer 	DATA_VERTEX 		  = StringHash("Vertex Color")
+
+	endglobals
+endlibrary
